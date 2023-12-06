@@ -29,8 +29,10 @@ public class RecommendStudent {
     @JoinColumn(name = "mentor_id")
     private Mentor mentor;
 
-    private String studentName;
-    private String studentBio;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "student_id")
+    private Student student;
+
     private String recommendationText;
     private String recommendationLink;
 

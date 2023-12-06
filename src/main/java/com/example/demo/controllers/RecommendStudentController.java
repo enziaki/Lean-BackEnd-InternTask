@@ -1,5 +1,7 @@
 package com.example.demo.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +13,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
 
-import com.example.demo.services.RecommendStudentService;
 import com.example.demo.entities.RecommendStudent;
+import com.example.demo.services.RecommendStudentService;
 
 @RestController
 @RequestMapping("/api/recommend")
@@ -24,7 +25,7 @@ public class RecommendStudentController {
     private RecommendStudentService recommendStudentService;
 
     // get all of the recommendations
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<RecommendStudent>> getAllRecommendations(){
         List<RecommendStudent> recommendation = recommendStudentService.getAllRecommendations();
         return ResponseEntity.ok(recommendation);
@@ -42,11 +43,15 @@ public class RecommendStudentController {
     }
 
     // create a new resource
-    @PostMapping
+    @PostMapping("/put")
     public ResponseEntity<RecommendStudent> saveRecommendation(@RequestBody RecommendStudent recommendation) {
+    try {
         RecommendStudent savedRecommendation = recommendStudentService.saveRecommendation(recommendation);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedRecommendation);
+        return new ResponseEntity<>(savedRecommendation, HttpStatus.CREATED);
+    } catch (Exception e) {
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
 
     
     // update a new resource
